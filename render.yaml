@@ -1,7 +1,0 @@
-# One-click deploy on Render (https://render.com): New > Blueprint > pick this repo.
-services:
-  - type: web
-    name: label-verification
-    runtime: docker
-    plan: free
-    healthCheckPath: /api/health

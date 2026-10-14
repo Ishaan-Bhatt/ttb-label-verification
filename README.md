@@ -2,7 +2,7 @@
 
 A web app that checks an alcohol label image against its application data: brand name, class/type, alcohol content, net contents, bottler name and address, country of origin, and the Government Health Warning Statement.
 
-**Live demo:** _add deployed URL here_
+**Live demo:** https://ttb-label-verification.happycliff-476a8415.northcentralus.azurecontainerapps.io/
 
 The page has built-in examples, so you can try it without any files: on **Check one label**, pick from **"Or try an example label"**; on **Check many labels**, press **Try the example batch**.
 
@@ -44,7 +44,26 @@ docker run --rm -v "$PWD:/srv" label-verify sh -c "pip install -q pytest httpx &
 
 ### Deploying
 
-The app is one Docker container with no external services, so it runs on any container host (Render, Fly.io, Azure Container Apps, App Service). `render.yaml` is included for Render: **New → Blueprint** → select the repo. On Render's free plan, the first request after 15 idle minutes takes about 30–60 seconds while the container wakes up. Requests after that take about 1 second.
+The app is one Docker container with no external services, so it runs on any container host. The live demo runs on **Azure Container Apps**, the same cloud the agency uses. One replica is kept running at all times (`--min-replicas 1`), so there's no cold-start delay. The image is built locally and pulled from GitHub Container Registry:
+
+```powershell
+# Build and publish the image (make the package public in GitHub's package settings)
+docker build --platform linux/amd64 -t ghcr.io/ishaan-bhatt/ttb-label-verification:v1 .
+docker push ghcr.io/ishaan-bhatt/ttb-label-verification:v1
+
+# One-time setup (use a region your subscription allows)
+az group create --name ttb-label-rg --location northcentralus
+az containerapp env create --name ttb-label-env --resource-group ttb-label-rg `
+  --location northcentralus --logs-destination none
+
+az containerapp create --name ttb-label-verification --resource-group ttb-label-rg `
+  --environment ttb-label-env --image ghcr.io/ishaan-bhatt/ttb-label-verification:v1 `
+  --target-port 8000 --ingress external --cpu 1 --memory 2Gi --min-replicas 1 --max-replicas 2
+
+# Ship a new version
+az containerapp update -n ttb-label-verification -g ttb-label-rg `
+  --image ghcr.io/ishaan-bhatt/ttb-label-verification:v2
+```
 
 ---
 
