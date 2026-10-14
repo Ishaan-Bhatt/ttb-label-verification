@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Label Verification</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>Label Verification</h1>
+      <p class="subtitle">Check that a label image matches its application.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="tabs" role="tablist" aria-label="Mode">
+      <button class="tab" role="tab" id="tab-single" aria-controls="panel-single" aria-selected="true">Check one label</button>
+      <button class="tab" role="tab" id="tab-batch" aria-controls="panel-batch" aria-selected="false">Check many labels</button>
+    </nav>
+
+    <!-- ============ Single label ============ -->
+    <section id="panel-single" role="tabpanel" aria-labelledby="tab-single">
+      <form id="single-form" class="card" novalidate>
+        <div class="steps">
+          <div class="step">
+            <h2><span class="step-num">1</span> Label image</h2>
+            <label class="dropzone" id="dropzone">
+              <input type="file" id="image-input" accept="image/*" hidden>
+              <img id="image-preview" alt="Label preview" hidden>
+              <span class="dropzone-text" id="dropzone-text">
+                <strong>Click to choose an image</strong><br>or drag it here
+              </span>
+            </label>
+            <p class="hint" id="image-name"></p>
+          </div>
+
+          <div class="step">
+            <h2><span class="step-num">2</span> Application details</h2>
+            <p class="hint">Fill in what the application says. Leave a box empty to skip it.</p>
+            <div class="field">
+              <label for="brand_name">Brand name</label>
+              <input id="brand_name" name="brand_name" placeholder="e.g. OLD TOM DISTILLERY" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="class_type">Class / type</label>
+              <input id="class_type" name="class_type" placeholder="e.g. Kentucky Straight Bourbon Whiskey" autocomplete="off">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="alcohol_content">Alcohol content</label>
+                <input id="alcohol_content" name="alcohol_content" placeholder="e.g. 45% Alc./Vol. (90 Proof)" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="net_contents">Net contents</label>
+                <input id="net_contents" name="net_contents" placeholder="e.g. 750 mL" autocomplete="off">
+              </div>
+            </div>
+            <div class="field">
+              <label for="bottler">Bottler / producer name and address</label>
+              <input id="bottler" name="bottler" placeholder="e.g. Old Tom Distillery, Bardstown, Kentucky" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="country_of_origin">Country of origin <span class="optional">(imports only)</span></label>
+              <input id="country_of_origin" name="country_of_origin" placeholder="e.g. France" autocomplete="off">
+            </div>
+            <p class="hint">The government warning is always checked.</p>
+          </div>
+        </div>
+
+        <p class="form-error" id="single-error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="check-btn">Check label</button>
+          <button type="button" class="btn btn-secondary" id="clear-btn">Start over</button>
+        </div>
+        <div class="examples">
+          <label for="example-select">Or try an example label:</label>
+          <select id="example-select"><option value="">Choose an example…</option></select>
+        </div>
+      </form>
+
+      <div id="single-result" aria-live="polite"></div>
+    </section>
+
+    <!-- ============ Batch ============ -->
+    <section id="panel-batch" role="tabpanel" aria-labelledby="tab-batch" hidden>
+      <div class="card">
+        <div class="steps">
+          <div class="step">
+            <h2><span class="step-num">1</span> Label images</h2>
+            <label class="file-pick">
+              <input type="file" id="batch-images" accept="image/*" multiple hidden>
+              <span class="btn btn-secondary">Choose label images</span>
+            </label>
+            <p class="hint" id="batch-images-summary">You can select hundreds of images at once.</p>
+          </div>
+          <div class="step">
+            <h2><span class="step-num">2</span> Application details (spreadsheet)</h2>
+            <label class="file-pick">
+              <input type="file" id="batch-csv" accept=".csv,text/csv" hidden>
+              <span class="btn btn-secondary">Choose CSV file</span>
+            </label>
+            <p class="hint" id="batch-csv-summary">
+              One row per label. The <code>filename</code> column must match the image's file name.
+              <a href="/static/template.csv" download>Download a blank template</a>.
+            </p>
+          </div>
+        </div>
+        <p class="form-error" id="batch-error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="batch-start">Check all labels</button>
+          <button type="button" class="btn btn-secondary" id="batch-sample">Try the example batch</button>
+        </div>
+      </div>
+
+      <div id="batch-progress" class="card" hidden>
+        <div class="progress-head">
+          <strong id="progress-text">Checking…</strong>
+          <button type="button" class="btn btn-small" id="batch-cancel">Stop</button>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div id="batch-results" hidden>
+        <div class="batch-summary" id="batch-summary"></div>
+        <div class="batch-toolbar">
+          <div class="filters" role="group" aria-label="Show">
+            <button type="button" class="filter" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="filter" data-filter="fail" aria-pressed="false">Problems</button>
+            <button type="button" class="filter" data-filter="review" aria-pressed="false">Needs review</button>
+            <button type="button" class="filter" data-filter="pass" aria-pressed="false">Passed</button>
+          </div>
+          <button type="button" class="btn btn-secondary btn-small" id="batch-download">Download results (CSV)</button>
+        </div>
+        <ul class="batch-list" id="batch-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    Prototype. Label images are checked on this server and are not stored.
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

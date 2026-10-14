@@ -1,0 +1,12 @@
+filename,brand_name,class_type,alcohol_content,net_contents,bottler,country_of_origin,notes
+01_old_tom_compliant.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,Fully compliant label. Expect: pass.
+02_stones_throw_capitalization.png,Stone's Throw,Small Batch Gin,41.5% Alc./Vol. (83 Proof),700 mL,"Stone's Throw Spirits, Portland, Oregon",,"Brand in all caps on label, title case on application (Dave's example). Expect: pass."
+03_old_tom_wrong_abv.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,"Label says 40%, application says 45%. Expect: fail."
+04_title_case_warning.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,Warning heading in title case (Jenny's example). Expect: fail.
+05_warning_heading_not_bold.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,Warning heading in regular weight. Expect: fail.
+06_altered_warning_wording.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,Warning wording changed. Expect: fail.
+07_missing_warning.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,No government warning. Expect: fail.
+08_wrong_net_contents.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,"Label says 1 L, application says 750 mL. Expect: fail."
+09_imported_wine.png,Chateau Marchand,Bordeaux Red Wine,13.5%,750 mL,"Harbor Wine Imports, Seattle, Washington",France,Imported wine with country of origin; accent on label but not application. Expect: pass.
+10_old_tom_photo.jpg,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,Compliant label photographed at a slight angle with glare and noise. Expect: pass.
+11_whole_warning_bold.png,OLD TOM DISTILLERY,Kentucky Straight Bourbon Whiskey,45% Alc./Vol. (90 Proof),750 mL,"Old Tom Distillery, Bardstown, Kentucky",,Entire warning in bold; only the heading may be bold. Expect: fail.
